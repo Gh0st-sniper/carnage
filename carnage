@@ -1,0 +1,64 @@
+#!/usr/bin/ruby
+
+require "socket"      
+require "colorize"
+require "timeout"
+require "artii"
+
+IP = ARGV[0]
+
+system("artii LET there be CARNAGE !")
+
+if IP.nil? == true then 
+ 
+
+
+puts "[+] USAGE : ./carnage.rb <IP>"
+
+exit 0
+
+end
+
+
+def scan
+	#puts "Enter IP address"
+	#ip = gets.strip
+	puts "Starting scan on #{ IP}".colorize(:light_blue)
+	
+	(0..1024).each  do |port|
+
+	Thread.new { 
+
+		begin 
+		
+			Timeout.timeout(2) do
+			
+			socket = TCPSocket.new(IP,port)
+			
+			banner = socket.recv(1024)
+			puts "#{port} || open ::    #{banner}".colorize(:light_green)
+			socket.close
+
+			end
+			
+		rescue => e
+			puts "#{port}   filtered or close".colorize(:red)
+			#puts e.message
+
+		end
+
+		}.join
+	end
+
+end
+
+
+
+
+#call scan function
+
+scan()
+	
+		
+
+
